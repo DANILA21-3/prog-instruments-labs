@@ -56,6 +56,10 @@ def load_dataset(m):
 
 
 def prepare_data(dataset_path=r"../dataset/date-normalization", dataset_size=10, debug=False):
+    if not os.path.exists(dataset_path):
+        os.makedirs(dataset_path, exist_ok=True)
+        print(f"Создана директория: {dataset_path}")
+        
     if debug:
         dataset_size = 10
         train_file = os.path.join(dataset_path, "train_samll.csv")
@@ -63,6 +67,7 @@ def prepare_data(dataset_path=r"../dataset/date-normalization", dataset_size=10,
     else:
         train_file = os.path.join(dataset_path, "train.csv")
         eval_file = os.path.join(dataset_path, "eval.csv")
+        
     if not os.path.exists(train_file) and not os.path.exists(eval_file):
         dataset = load_dataset(dataset_size)
         source, target = zip(*dataset)
@@ -98,5 +103,6 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
 
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
+
 
 
