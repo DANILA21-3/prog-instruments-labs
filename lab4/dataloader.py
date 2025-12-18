@@ -12,6 +12,7 @@ import torch
 from faker import Faker
 import random
 
+from config import DATE_FORMATS, LOCALES
 from torch.nn import init
 from tqdm import tqdm
 from babel.dates import format_date
@@ -22,36 +23,6 @@ fake = Faker()
 Faker.seed(12345)
 random.seed(12345)
 
-# Define format of the data we would like to generate
-FORMATS = ['short',
-           'medium',
-           'long',
-           'full',
-           'full',
-           'full',
-           'full',
-           'full',
-           'full',
-           'full',
-           'full',
-           'full',
-           'full',
-           'd MMM YYY',
-           'd MMMM YYY',
-           'dd MMM YYY',
-           'd MMM, YYY',
-           'd MMMM, YYY',
-           'dd, MMM YYY',
-           'd MM YY',
-           'd MMMM YYY',
-           'MMMM d YYY',
-           'MMMM d, YYY',
-           'dd.MM.YY']
-
-# change this if you want it to work with another language
-LOCALES = ['en_US']
-
-
 def load_date():
     """
         Loads some fake dates
@@ -60,7 +31,7 @@ def load_date():
     dt = fake.date_object()
 
     try:
-        human_readable = format_date(dt, format=random.choice(FORMATS), locale='en_US')
+        human_readable = format_date(dt, format=random.choice(DATE_FORMATS), locale='en_US')
         human_readable = human_readable.lower()
         human_readable = human_readable.replace(',', '')
         machine_readable = dt.isoformat()
@@ -127,5 +98,6 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
 
     # 在 test_iter , sort一定要设置成 False, 要不然会被 torchtext 搞乱样本顺序
     # test_iter = data.Iterator(dataset=test, batch_size=128, train=False, sort=False, device=DEVICE)
+
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
