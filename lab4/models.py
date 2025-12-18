@@ -43,24 +43,19 @@ class DecoderAttenRNN(nn.Module):
         self.atten_affine = nn.Linear(hidden_size*2, hidden_size)
 
     def get_alpha(self, hi, encoder_output):
-        # hi shape (1, batch_size, hidden_size)
-        # encoder_output (batch, seq_len, hidden_size)
-        hi = hi.permute(1, 2, 0)   # (batch_size, hidden_size, 1)
-        # print(encoder_output.shape, hi.shape)
-        e = torch.bmm(encoder_output, hi).squeeze(2)  # (batch_size, seq_len)
-        e = F.softmax(e, dim=1).unsqueeze(2)       # (batch_size, seq_len, 1)
-        alpha = (e * encoder_output).sum(dim=1)    # (batch_size, hidden_size)
+        hi = hi.permute(1, 2, 0)  
+        e = torch.bmm(encoder_output, hi).squeeze(2)  
+        e = F.softmax(e, dim=1).unsqueeze(2)       
+        alpha = (e * encoder_output).sum(dim=1)   
 
         return alpha
 
     def forward(self, x, init_state, seq_encoder_output):
-        # print(x.shape, init_state.shape, seq_encoder_output.shape)
         batch_size, max_len, _ = x.shape  # 独热码表示
         hi = init_state
         seq_decoder_output = []
         for i in range(max_len):
-            # alpha shape (batch_size, hidden_size)
-            alpha = self.get_alpha(hi, seq_encoder_output)  # alpha 表示当前time step的隐状态矩阵和encoder的各个time step输出的关联
+            alpha = self.get_alpha(hi, seq_encoder_output) 
             hi = torch.cat([alpha.unsqueeze(0), hi], dim=2)
             hi = self.atten_affine(hi)
             output, hi = self.gru(x[:, i, :].unsqueeze(1), hi)
@@ -83,7 +78,6 @@ class SimpleNMT(nn.Module):
     def forward(self, encoder_input, encoder_init_hidden, decoder_input=None, out_word2index=None, out_index2word=None,
                 max_len=None, out_size=None):
         encoder_seq_output, encoder_last_state = self.encoder(encoder_input, encoder_init_hidden)
-        # 训练时decoder每个time step输入标准答案
         if decoder_input is not None:
             if self.with_attention:
                 logits, _ = self.decoder(decoder_input, encoder_last_state, encoder_seq_output)
@@ -91,7 +85,6 @@ class SimpleNMT(nn.Module):
                 logits, _ = self.decoder(decoder_input, encoder_last_state)
             return logits
         else:
-            # 测试时没有标准答案，一直解码直到出现<end>或者达到最大长度
             decoded_sents = []
             for i in range(len(encoder_input)):
                 sent = []
@@ -99,11 +92,6 @@ class SimpleNMT(nn.Module):
                 hi = encoder_last_state[:, i, :].unsqueeze(1)
                 for di in range(max_len):
                     if self.with_attention:
-                        # alpha = self.decoder.get_alpha(hi, encoder_seq_output[i, :, :].unsqueeze(
-                        #     0))  # alpha 表示当前time step的隐状态矩阵和encoder的各个time step输出的关联
-                        # hi = torch.cat([alpha.unsqueeze(0), hi], dim=2)
-                        # hi = self.decoder.atten_affine(hi)
-                        # # print(decoder_input.shape, hi.shape, encoder_seq_output.shape)
                         decoder_output, hdi = self.decoder(decoder_input, hi, encoder_seq_output[i, :, :].unsqueeze(0))
                     else:
                         decoder_output, hdi = self.decoder(decoder_input, hi)
@@ -117,4 +105,5 @@ class SimpleNMT(nn.Module):
                     hi = hdi
                 decoded_sents.append(sent)
             return decoded_sents
+
 
