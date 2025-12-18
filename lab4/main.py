@@ -26,8 +26,6 @@ if __name__ == "__main__":
     source_vocab_size = len(source_vocab.stoi)
     target_vocab_size = len(target_vocab.stoi)
 
-    # print(target_vocab.stoi)
-
     Tx, Ty = 25, 10  # 最大长度
 
     model = SimpleNMT(in_vocab_size=source_vocab_size, out_vocab_size=target_vocab_size, in_hidden_size=hidden_size,
@@ -60,15 +58,6 @@ if __name__ == "__main__":
             optimizer.step()
         if ep % (epoch // 10) == 0:
             print("loss", epoch_loss)
-
-    # 测试训练集输出是否正确
-    # for batch in train_iter:
-    #     # print(batch.source.t())
-    #     print(batch.target.t()[:, 1:])
-    # print("finish")
-    # init_hidden = torch.zeros(1, batch_size, hidden_size)
-    # logits = model(Xin, init_hidden, Yin)
-    # print(logits.argmax(-1))
 
     sents_for_large = ["monday may 7 1983", "19 march 1998", "18 jul 2008", "9/10/70", "thursday january 1 1981",
                        "thursday january 26 2015", "saturday april 18 1990", "sunday may 12 1988"]
@@ -131,3 +120,4 @@ if __name__ == "__main__":
     saturday april 18 1990 --> 1990-04-18
     sunday may 12 1988 --> 1988-05-12
     """
+
