@@ -82,6 +82,12 @@ def prepare_data(dataset_path=r"../dataset/date-normalization", dataset_size=10,
 
 
 def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False):
+     if batch_size <= 0:
+        raise ValueError(f" Некорретный размер batch_size = {batch_size}. Должен быть больше 0")
+    
+    if batch_size > 256:
+        print(f" Некорретный размер batch_size = {batch_size}. Должен быть меньше 256")
+        
     train_csv, dev_csv = prepare_data(dataset_path, dataset_size=dataset_size, debug=debug)
 
     def tokenizer(text):
@@ -98,11 +104,23 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
     SOURCE.build_vocab(train)
     TARGET.build_vocab(train)
 
+    if len(SOURCE.vocab) < 10:
+        print(f"Исходный словарь очень маленький: {len(SOURCE.vocab)} токенов")
+    
+    if len(TARGET.vocab) < 10:
+        print(f"Целевой словарь очень маленький: {len(TARGET.vocab)} токенов")
+
+    required_tokens = ["<pad>", "<unk>"]
+    for token in required_tokens:
+        if token not in SOURCE.vocab.stoi:
+            print(f"Токен '{token}' отсутствует в исходном словаре")
+
     train_iter = data.BucketIterator(train, batch_size=batch_size, sort_key=lambda x: len(x.sent), shuffle=False)
     val_iter = data.BucketIterator(val, batch_size=batch_size, sort_key=lambda x: len(x.sent), shuffle=False)
 
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
+
 
 
 
