@@ -12,7 +12,7 @@ import torch.nn.functional as F
 
 class EncoderRNN(nn.Module):
     def __init__(self, vocab_size, hidden_size, dropout=0.5):
-        super(EncoderRNN, self).__init__()
+        super().__init__()
         self.hidden_size = hidden_size
         self.gru = nn.GRU(vocab_size, hidden_size, dropout=dropout, batch_first=True)
 
@@ -23,7 +23,7 @@ class EncoderRNN(nn.Module):
 
 class DecoderRNN(nn.Module):
     def __init__(self, vocab_size, hidden_size, output_size, dropout=0.5):
-        super(DecoderRNN, self).__init__()
+        super().__init__()
         self.hidden_size = hidden_size
         self.gru = nn.GRU(vocab_size, hidden_size, dropout=dropout, batch_first=True)
         self.hidden2index = nn.Linear(hidden_size, output_size)
@@ -36,7 +36,7 @@ class DecoderRNN(nn.Module):
 
 class DecoderAttenRNN(nn.Module):
     def __init__(self, vocab_size, hidden_size, output_size, dropout=0.5):
-        super(DecoderAttenRNN, self).__init__()
+        super().__init__()
         self.hidden_size = hidden_size
         self.gru = nn.GRU(vocab_size, hidden_size, dropout=dropout, batch_first=True)
         self.hidden2label = nn.Linear(hidden_size, output_size)
@@ -72,7 +72,7 @@ class DecoderAttenRNN(nn.Module):
 
 class SimpleNMT(nn.Module):
     def __init__(self, in_vocab_size, out_vocab_size, in_hidden_size, out_hidden_size, output_size, with_attention=False):
-        super(SimpleNMT, self).__init__()
+        super().__init__()
         self.with_attention = with_attention
         self.encoder = EncoderRNN(in_vocab_size, in_hidden_size)
         if self.with_attention:
@@ -117,3 +117,4 @@ class SimpleNMT(nn.Module):
                     hi = hdi
                 decoded_sents.append(sent)
             return decoded_sents
+
