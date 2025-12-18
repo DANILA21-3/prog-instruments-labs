@@ -96,8 +96,6 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
     train_iter = data.BucketIterator(train, batch_size=batch_size, sort_key=lambda x: len(x.sent), shuffle=False)
     val_iter = data.BucketIterator(val, batch_size=batch_size, sort_key=lambda x: len(x.sent), shuffle=False)
 
-    # 在 test_iter , sort一定要设置成 False, 要不然会被 torchtext 搞乱样本顺序
-    # test_iter = data.Iterator(dataset=test, batch_size=128, train=False, sort=False, device=DEVICE)
-
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
+
