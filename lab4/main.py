@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-"""
-Created on 2020/6/8 11:36
-@author: phil
-"""
 from keras.utils import to_categorical
 
 from dataloader import load_dataset, dataset2dataloader
@@ -26,7 +20,7 @@ if __name__ == "__main__":
     source_vocab_size = len(source_vocab.stoi)
     target_vocab_size = len(target_vocab.stoi)
 
-    Tx, Ty = 25, 10  # 最大长度
+    Tx, Ty = 25, 10  
 
     model = SimpleNMT(in_vocab_size=source_vocab_size, out_vocab_size=target_vocab_size, in_hidden_size=hidden_size,
                       out_hidden_size=hidden_size, output_size=target_vocab_size, with_attention=True)
@@ -47,8 +41,6 @@ if __name__ == "__main__":
             Xin, Yin, Yout = batch.source.t().long(), batch.target.t()[:, :-1].long(), batch.target.t()[:, 1:]
             batch_size = len(Xin)
             init_hidden = torch.zeros(1, batch_size, hidden_size)
-            # if ep == epoch - 1:
-            #     print(Yout)
             Xin = embed_layer1(Xin).float()
             Yin = embed_layer2(Yin).float()
             logits = model(Xin, init_hidden, Yin)
@@ -77,47 +69,4 @@ if __name__ == "__main__":
 
 
     translate(model, sents)
-
-    """ 不使用 attention
-    dataset_size : 10000
-    loss 940.5139790773392
-    loss 151.68325132876635
-    loss 17.91189043689519
-    loss 8.461621267197188
-    loss 0.4571912245155545
-    loss 4.067497536438168
-    loss 0.02432645454427984
-    loss 0.022933890589229122
-    loss 1.740354736426525
-    loss 2.7019595313686295
-    monday may 7 1983 --> 1983-05-07
-    19 march 1998 --> 1998-03-19
-    18 jul 2008 --> 2008-07-18
-    9/10/70 --> 1970-09-10
-    thursday january 1 1981 --> 1981-01-01
-    thursday january 26 2015 --> 2015-01-26
-    saturday april 18 1990 --> 1990-04-18
-    sunday may 12 1988 --> 1988-05-12
-    """
-
-    """使用attention
-    loss 870.4544065594673
-    loss 65.41884177550673
-    loss 53.339022306521656
-    loss 0.08635593753569992
-    loss 0.057157438381182146
-    loss 0.0006471980702968949
-    loss 0.09261544834953384
-    loss 0.000922315769471993
-    loss 0.00961817828419953
-    loss 0.06814217135979561
-    monday may 7 1983 --> 1983-05-07
-    19 march 1998 --> 1998-03-19
-    18 jul 2008 --> 2008-07-18
-    9/10/70 --> 1970-09-10
-    thursday january 1 1981 --> 1981-01-01
-    thursday january 26 2015 --> 2015-01-26
-    saturday april 18 1990 --> 1990-04-18
-    sunday may 12 1988 --> 1988-05-12
-    """
 
