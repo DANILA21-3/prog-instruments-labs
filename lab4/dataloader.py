@@ -110,7 +110,3 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
 
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
-
-
-
-
