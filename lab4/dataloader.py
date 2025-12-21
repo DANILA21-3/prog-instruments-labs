@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-"""
-Created on 2020/6/8 11:26
-@author: phil
-"""
-
 import os
 import numpy as np
 import torch
@@ -117,7 +110,6 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
 
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
-
 
 
 
