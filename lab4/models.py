@@ -99,6 +99,4 @@ class SimpleNMT(nn.Module):
                     hi = hdi
                 decoded_sents.append(sent)
             return decoded_sents
-
-
-
+            
