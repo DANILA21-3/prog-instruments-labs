@@ -5,7 +5,6 @@ Created on 2020/6/8 11:26
 @author: phil
 """
 
-# 参考吴恩达老师网易云深度学习课程作业
 import os
 import numpy as np
 import torch
@@ -93,9 +92,7 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
     def tokenizer(text):
         return list(text)
 
-    # 这里只是定义了数据格式
     SOURCE = data.Field(sequential=True, tokenize=tokenizer, lower=False)
-    # 目标输出前后需加入特殊的标志符
     TARGET = data.Field(sequential=True, tokenize=tokenizer, lower=False, init_token="<start>", eos_token="<end>")
     train, val = data.TabularDataset.splits(
         path='', train=train_csv, validation=dev_csv, format='csv', skip_header=True,
@@ -120,6 +117,7 @@ def dataset2dataloader(dataset_path, batch_size=10, dataset_size=10, debug=False
 
 
     return train_iter, val_iter, SOURCE.vocab, TARGET.vocab
+
 
 
 
