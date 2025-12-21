@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-"""
-Created on 2020/6/10 11:18
-@author: phil
-"""
 import torch.nn as nn
 import torch
 import numpy as np
@@ -51,7 +45,7 @@ class DecoderAttenRNN(nn.Module):
         return alpha
 
     def forward(self, x, init_state, seq_encoder_output):
-        batch_size, max_len, _ = x.shape  # 独热码表示
+        batch_size, max_len, _ = x.shape 
         hi = init_state
         seq_decoder_output = []
         for i in range(max_len):
@@ -105,5 +99,6 @@ class SimpleNMT(nn.Module):
                     hi = hdi
                 decoded_sents.append(sent)
             return decoded_sents
+
 
 
